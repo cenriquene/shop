@@ -1,2 +1,2 @@
 # shop
-E-commerce shos
+E-commerce shop
