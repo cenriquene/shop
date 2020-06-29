@@ -15,9 +15,33 @@
 </template>
 
 <script>
+    import ProductsService from './../services/ProductsService';
+
     export default {
         mounted() {
             console.log('Component mounted.')
+        },
+        created() {
+            this.fetchProducts();
+            console.log(axios)
+        },
+        computed: {
+
+        },
+        data: () => ({
+        }),
+        methods:{
+            goTo(path) {
+                this.$router.push({path});
+            },
+            async fetchProducts() {
+                try {
+                    let data = await ProductsService.getProducts();
+                    console.log(data);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
         }
     }
 </script>

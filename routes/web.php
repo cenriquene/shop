@@ -35,3 +35,15 @@ Route::get('/admin/{any}', 'SecureController@index')->where('any', '.*');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+/* Route to get the current cart session */
+Route::get('/get-cart-session', 'SiteController@getCartSession');
+Route::post('/store-sale', 'SiteController@storeSale');
+
+/* Route to get product details by slug */
+Route::get('/{slug}', 'Api\v1\ProductsController@show');
+
+Route::get('/checkout', 'SiteController@checkout');
+
+/* Route to add product to session cart */
+Route::post('/add-product-to-cart', 'SiteController@addProductToCart');

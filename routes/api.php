@@ -14,6 +14,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::group(['middleware' => ['json-response']], function () {
+    Route::middleware('auth:api')->get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('login', 'Api\AuthController@login')->name('login.api');
+    Route::post('register', 'Api\AuthController@register')->name('register.api');
+
+    Route::middleware('auth:api')->namespace('Api\\v1')->prefix('v1')->group(function () {
+        /* Products endpoints */
+        Route::get('products', 'ProductsController@index');
+
+        /* Sales endpoints */
+        Route::get('sales', 'SalesController@index');
+
+    });
 });

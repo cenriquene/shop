@@ -3,6 +3,9 @@ import VueRouter from 'vue-router';
 
 import HomeComponent from "./components/home/HomeComponent";
 import DashboardComponent from "./components/home/DashboardComponent";
+import ProductsComponent from "./components/products/ProductsComponent";
+import SalesComponent from "./components/sales/SalesComponent";
+import UsersComponent from "./components/users/UsersComponent";
 
 import PageNotFound from "./components/errors/404";
 
@@ -14,10 +17,24 @@ const routes = [
         path: '/admin',
         name: 'home',
         component: HomeComponent,
-        children: [{
-            path: 'dashboard',
-            component: DashboardComponent
-        }]
+        children: [
+            {
+                path: 'dashboard',
+                component: DashboardComponent
+            },
+            {
+                path: 'products',
+                component: ProductsComponent
+            },
+            {
+                path: 'sales',
+                component: SalesComponent
+            },
+            {
+                path: 'users',
+                component: UsersComponent
+            }
+        ]
     },
     {
         path: '*',

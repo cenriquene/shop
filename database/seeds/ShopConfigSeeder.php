@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class ShopConfigSeeder extends Seeder
 {
@@ -13,9 +14,10 @@ class ShopConfigSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'name'              => 'Carlos Enrique Hoy Chi',
-                'email'             => 'cenriquene@gmail.com',
-                'password'          => bcrypt('password')
+                'name'      => 'Carlos Enrique Hoy Chi',
+                'email'     => 'cenriquene@gmail.com',
+                'password'  => bcrypt('password'),
+                'created_at' => Carbon::now()
             ]
         ]);
     }
