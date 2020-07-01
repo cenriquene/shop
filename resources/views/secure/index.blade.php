@@ -12,6 +12,19 @@
         <link href='/css/app.css' rel="stylesheet">
 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+        <script>
+            window.session = <?php
+                use Illuminate\Support\Facades\Auth;
+                echo json_encode([
+                    'user' => [
+                        'username' => Auth::user()->name,
+                        'email' => Auth::user()->email,
+                        'id' => Auth::user()->id
+                    ]
+                ]);
+            ?>;
+        </script>
     </head>
 
     <body>

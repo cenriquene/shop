@@ -27,7 +27,7 @@ Route::get('/logout', function () {
 });
 
 Route::get('/admin', function(){
-    return redirect('/admin/dashboard');
+    return redirect('/admin/users');
 });
 
 Route::get('/admin/{any}', 'SecureController@index')->where('any', '.*');
@@ -35,3 +35,20 @@ Route::get('/admin/{any}', 'SecureController@index')->where('any', '.*');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+/* Route to get the current cart session */
+Route::get('/get-cart-session', 'SiteController@getCartSession');
+Route::post('/store-sale', 'SiteController@storeSale');
+
+/* Route to get products from the shop section */
+Route::get('/products', 'SiteController@getShopProducts');
+
+/* Route to get product details by slug */
+Route::get('/{slug}', 'Api\v1\ProductsController@show');
+
+/* Checkout Route */
+Route::get('/checkout', 'SiteController@checkout');
+
+/* Route to add product to session cart */
+Route::post('/add-product-to-cart', 'SiteController@addProductToCart');
+Route::delete('/delete-product-session/{id}', 'SiteController@deleteProductSession');

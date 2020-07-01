@@ -10,19 +10,59 @@
             app
             overflow
         >
-            <v-list
-                dense
-                nav
-            >
+            <v-list-item class="px-2">
+                <v-list-item-avatar size="70">
+                    <v-img
+                        src="https://iupac.org/wp-content/uploads/2018/05/default-avatar.png">
+                    </v-img>
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                <v-list-item-title>{{ user_name }}</v-list-item-title>
+                <v-list-item-subtitle>Administrator</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-list>
                 <v-divider></v-divider>
-                <v-list-item link @click="logout">
+                <v-list-item
+                    router
+                    exact
+                    to="/admin/users">
                     <v-list-item-icon>
                         <v-icon>
-                            power_settings_new
+                            people_alt
                         </v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
-                        <v-list-item-title>Logout</v-list-item-title>
+                        <v-list-item-title>Users</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item
+                    router
+                    exact
+                    to="/admin/products">
+                    <v-list-item-icon>
+                        <v-icon>
+                            add_business
+                        </v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Products</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item
+                    router
+                    exact
+                    to="sales">
+                    <v-list-item-icon>
+                        <v-icon>
+                            shopping_cart
+                        </v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Sales</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
@@ -75,16 +115,15 @@
 <script>
     export default {
         created() {
-
         },
         mounted() {
-
+            this.user_name = window.session.user.username;
         },
         computed: {
 
         },
         data: () => ({
-            user_name:'HomeComponent',
+            user_name: 'Username',
             primaryDrawer: {
                 model: null,
                 type: 'default (no property)',
@@ -94,15 +133,12 @@
             },
             footer: {
                 inset: true,
-            },
-            pathPrefix:'/secure/',
+            }
         }),
         methods:{
-            goTo(path) {
-                this.$router.push({path});
-            },
             logout() {
-
+                window.session.user = null;
+                window.location.href = '/logout';
             }
         }
     }
