@@ -17,6 +17,7 @@
             :headers="headers"
             :items="items"
             :search="search"
+            :loading="loading"
         >
             <template v-slot:item.actions="{ item }">
                 <v-menu offset-y>
@@ -60,6 +61,9 @@
                     {'action': 'update', 'title': 'Edit', 'emit': 'editClicked'},
                     {'action': 'delete', 'title': 'Delete', 'emit': 'deleteClicked'}
                 ]
+            },
+            loading: {
+                default: true
             },
         },
         data () {

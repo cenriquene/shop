@@ -26,6 +26,20 @@ class SiteController extends Controller
         return view('site.checkout')->with('cart', $cart);
     }
 
+    /* Get shop products */
+    public function getShopProducts(Request $request)
+    {
+        $products = Product::where('status', True)
+                        ->with('category')
+                        ->get();
+
+        $data = [
+            'products' => $products
+        ];
+
+        return $this->JsonResponse('Products Found', 200, $data);
+    }
+
     /*
         Add the product selected to the current cart session, if does not exist will be created
     */
@@ -43,7 +57,7 @@ class SiteController extends Controller
 
         $productObject = Product::where('id', $productId)
                                 ->with('category')
-                                ->first();
+                                ->firstOrFail();
 
         /*
             we found the current selected product by Id, if exist in the cart session we need to update the total, otherwise
@@ -62,7 +76,7 @@ class SiteController extends Controller
 
         $request->session()->put('cart', $cart);
 
-        return $this->JsonResponse('Cart updated succesfully Found', 200, $cart);
+        return $this->JsonResponse('Cart updated succesfully', 200, $cart);
     }
 
     protected function setInitStateCartSession($request)
@@ -80,6 +94,7 @@ class SiteController extends Controller
         $cart = session('cart');
         return $this->JsonResponse('Cart session get succesfully', 200, $cart);
     }
+
     /*
         Store reservetaion, this method use the current data cart saved on session
     */
@@ -108,7 +123,7 @@ class SiteController extends Controller
         $productIds = [];
 
         foreach ($cart['products'] as $key => $product) {
-            $total = $product['total'] + $product['product']->total;
+            $total += $product['total'] * $product['product']->price;
             array_push($productIds,  $product['product']->id);
         }
 
@@ -142,8 +157,40 @@ class SiteController extends Controller
             $this->setInitStateCartSession($request);
 
             return $this->JsonResponse("Sale successfully created");
-        } catch ( Exception $e ) {
+        } catch ( \Exception $e ) {
             return $this->JsonResponse('Error creating the sale', 200, null, $e->getMessage());
+        }
+    }
+
+    /* Delete item from cart session */
+    public function deleteProductSession($id, Request $request)
+    {
+        try {
+            if( ! $id ) {
+                throw new Exception("Product identifier is required");
+            }
+
+            $cart = session('cart');
+
+            if ( $cart['products'][$id]['total'] > 1 ) {
+                $cart['products'][$id]['total'] -= 1;
+            } else {
+                unset($cart['products'][$id]);
+                $request->session()->put('cart', $cart);
+            }
+
+            $cart['total'] -= 1;
+
+            if ( $cart['total'] < 1 ) {
+                $this->setInitStateCartSession($request);
+            } else {
+                $request->session()->put('cart', $cart);
+            }
+
+
+            return $this->JsonResponse('Product successfully deleted');
+         } catch( Exception $e ) {
+            return $this->JsonResponse('Error deleting the product', 200, null, $e->getMessage());
         }
     }
 }

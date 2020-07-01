@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Sale;
+use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class SalesController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,13 +15,13 @@ class SalesController extends Controller
      */
     public function index()
     {
-        $sales = Sale::all();
+        $categories = Category::where('status', True)->get();
 
         $data = [
-            'sales' => $sales
+            'categories' => $categories
         ];
 
-        return $this->JsonResponse('Sales Found', 200, $data);
+        return $this->JsonResponse('Categories Found', 200, $data);
     }
 
     /**

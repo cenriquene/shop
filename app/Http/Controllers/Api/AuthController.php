@@ -46,10 +46,12 @@ class AuthController extends Controller
             if ( $is_valid_password ) {
                 $token = $user->createToken("There is a snake in my boot")->accessToken;
 
-                return response(['token' => $token], 200);
+                return response(['error' => false, 'token' => $token], 200);
             } else {
-                return response('Invalid user or password', 200);
+                return response(['error' => true, 'message' => 'Invalid user or password'], 200);
             }
+        } else {
+            return response(['error' => true, 'message' => 'User not found'], 200);
         }
     }
 

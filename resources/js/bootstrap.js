@@ -28,6 +28,11 @@ let token = document.head.querySelector('meta[name="csrf-token"]');
 if (token) {
     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 
+    if ( window.token ) {
+        token = window.token;
+        window.axios.defaults.headers.Authorization = `Bearer ${token}`;
+    }
+
     token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYWJjZTgwZWQ3MzI5ZWI0OTIwMjk5OGZmMDBiNzc5NmEwM2QyNTIzNDBkOGMzYjNlOTFiMTE4MjVjYmVjMDliMWUzYjY2MTBhYjVlZGM4MzkiLCJpYXQiOjE1OTM0MDg1NTIsIm5iZiI6MTU5MzQwODU1MiwiZXhwIjoxNjI0OTQ0NTUxLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.wQ3jCzYSy_zxTj2s5NFey780_ZkdpeXWji7qgk1eRyMKSklhL7T6mmPVrILBPFSxdSvOBREXWhtvSBDSERMHEMFV7PxzJAPwaMAZTG4deTbWR3ieVksuXio5mMe2JyJwyTz7M9yJvbb3HP8WobwgqaRGzgoCpo7VxBU4lcE3RPAm5OAtlKXNZV-DZ2E2CfpjUReUAC3u-WZlX76lr9zqnHiAE6hHxUw1SOAVSC-H8UonYYTtyb3yPlYKY-NCWabQgQUOWdrb1Cg6QFkzYzvn5aEoqZl-2Aurjw5n2WgHmu3fqCZ7uK5i4pmnITEZIpBxYaXCpRvnG2Ao6rZEecQ5ustnWrantKj7S0fGrT5q1R8KS9wIDqJHf5HC9hpDUU8BGIWI4tOOdzqC9Mx9LCqcMw8ZxuGZbP1ZVgSymOPqkkQVSSmT0a8kxEQLec2yAC2MNSCQIdBTdDPseJQOchshMiV10kQDbS27-SywCUV659qKKKFIxgom--lbF5E96HkA8MMN6ufl0P6eyp_bSwFPv8HAtDyrdRJ6hxtUDJ5nJghT2CdLyeBpp-NfX4pD6-YTU7FP6o9eOfuKBxStQVqLG2O54DmuQPH46pDiOg-fOjsywcxvkxT6JypDp059vIOu1-KdA9ToOF-sqDmLAOnygQPzZfHmULQvgiU1yDBXYdk";
     window.axios.defaults.headers.Authorization = `Bearer ${token}`;
 

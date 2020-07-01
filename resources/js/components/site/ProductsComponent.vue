@@ -53,13 +53,10 @@
                 products: []
             }
         },
-        methods:{
-            goTo(path) {
-                this.$router.push({path});
-            },
+        methods: {
             async fetchProducts() {
                 try {
-                    let response = await ProductsService.getProducts();
+                    let response = await ProductsService.getShopProducts();
                     this.products = response.data.data.products;
 
                     this.products.map(product => {
@@ -68,9 +65,6 @@
                 } catch (error) {
                     console.log(error);
                 }
-            },
-            goToProductDetails(payload) {
-                console.log('product details');
             },
             async addProductToCart(total=1, product) {
                 try {
@@ -86,7 +80,6 @@
                 } catch (error) {
                     console.log(error);
                 }
-                console.log(total, product);
             }
         }
     }

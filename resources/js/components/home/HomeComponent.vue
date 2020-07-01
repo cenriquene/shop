@@ -18,7 +18,7 @@
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                <v-list-item-title></v-list-item-title>
+                <v-list-item-title>{{ user_name }}</v-list-item-title>
                 <v-list-item-subtitle>Administrator</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -27,7 +27,7 @@
                 <v-list-item
                     router
                     exact
-                    to="users">
+                    to="/admin/users">
                     <v-list-item-icon>
                         <v-icon>
                             people_alt
@@ -41,7 +41,7 @@
                 <v-list-item
                     router
                     exact
-                    to="products">
+                    to="/admin/products">
                     <v-list-item-icon>
                         <v-icon>
                             add_business
@@ -115,16 +115,15 @@
 <script>
     export default {
         created() {
-
         },
         mounted() {
-
+            this.user_name = window.session.user.username;
         },
         computed: {
 
         },
         data: () => ({
-            user_name: 'HomeComponent',
+            user_name: 'Username',
             primaryDrawer: {
                 model: null,
                 type: 'default (no property)',
@@ -138,7 +137,8 @@
         }),
         methods:{
             logout() {
-
+                window.session.user = null;
+                window.location.href = '/logout';
             }
         }
     }

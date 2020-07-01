@@ -50,8 +50,10 @@ Vue.use(vueCountryRegionSelect)
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('layout-component', require('./components/LayoutComponent.vue').default);
 Vue.component('table-component', require('./components/TableComponent.vue').default);
+Vue.component('delete-dialog-component', require('./components/DeleteDialogComponent.vue').default);
 Vue.component('products-component', require('./components/site/ProductsComponent.vue').default);
 Vue.component('checkout-component', require('./components/site/CheckoutComponent.vue').default);
+Vue.component('login-component', require('./components/secure/LoginComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

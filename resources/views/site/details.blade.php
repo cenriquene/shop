@@ -15,9 +15,17 @@
                             <p class="item-intro text-muted">{{ $product->category->name }}</p>
                             <img class="img-fluid d-block mx-auto" src="https://store.hp.com/SpainStore/Html/Merch/Images/c05447684_500x367.jpg" alt="" />
                             <p>{{ $product->description }}</p>
-                            <button class="btn btn-primary" data-dismiss="modal" type="button"> ADD TO CART</button>
 
-                            <a class="btn btn-primary nav-link js-scroll-trigger" href="/checkout">CHECK OUT</a>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a class="btn btn-primary nav-link js-scroll-trigger" href="#">ADD TO CART</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="btn btn-primary nav-link js-scroll-trigger" href="/checkout">CHECK OUT</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

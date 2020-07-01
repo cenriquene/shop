@@ -1,5 +1,12 @@
 <template>
     <v-container>
+        <div class="alert alert-danger" role="alert" v-if="alert">
+            All fields are required!
+        </div>
+
+        <div class="alert alert-primary" role="alert" v-if="cart_total < 1">
+            No products in yout cart!
+        </div>
         <div class="card">
             <div class="card-header bg-primary text-white">
                 Items in your Cart
@@ -20,7 +27,16 @@
                                 <th scope="row">{{ product.total }}</th>
                                 <td>{{ product.product.name }}</td>
                                 <td>{{ product.product.price | currency }}</td>
-                                <td>delete</td>
+                                <td>
+                                    <v-btn
+                                        :loading="waitingForResponse"
+                                        class="btn btn-danger"
+                                        @click="removeProductFromCartSession(product.product)"
+                                    >
+                                        <i class="fa fa-trash"></i>
+                                    </v-btn>
+
+                                </td>
                             </tr>
 
                             <tr><td class="text-right" colspan="3">Subtotal</td><td>{{ total | currency }}</td></tr>
@@ -46,17 +62,14 @@
                                         <input
                                             type="text"
                                             v-model="first_name"
-                                            class="form-control"
-                                            required
-                                            :rules="[rules.required]">
+                                            class="form-control">
                                     </v-col>
                                     <v-col class="mt-3" cols="6">
                                         <label for="">Last Name</label>
                                         <input
                                             type="text"
                                             v-model="last_name"
-                                            class="form-control"
-                                            required>
+                                            class="form-control">
                                     </v-col>
                                     <v-col class="mt-3" cols="6">
                                         <label for="">Email</label>
@@ -127,20 +140,25 @@
                                         <input
                                             type="number"
                                             v-model="card"
-                                            class="form-control"
-                                            required>
+                                            min="16"
+                                            max="16"
+                                            class="form-control">
                                     </v-col>
                                     <v-col class="mt-3" cols="3">
                                         <label for="">Exp. Year</label>
                                         <input
-                                            type="text"
+                                            type="number"
                                             v-model="exp_year"
+                                            min="2"
+                                            max="2"
                                             class="form-control">
                                     </v-col>
                                     <v-col class="mt-3" cols="3">
                                         <label for="">Exp. Mont</label>
                                         <input
-                                            type="text"
+                                            type="number"
+                                            min="2"
+                                            max="2"
                                             v-model="exp_month"
                                             class="form-control">
                                     </v-col>
@@ -149,18 +167,22 @@
                                         <input
                                             type="number"
                                             v-model="cvc"
+                                            min="3"
+                                            max="3"
                                             class="form-control">
                                     </v-col>
                                     <v-col class="mt-3" cols="3">
                                         <label for="">Zip Code</label>
                                         <input
-                                            type="text"
+                                            type="number"
                                             v-model="card_zip_code"
                                             class="form-control">
                                     </v-col>
-                                    <v-col class="mt-3 text-center" cols="8">
+                                    <v-col class="mt-4 text-center" cols="12">
                                         <v-btn
-                                            class="add-to-card btn btn-primary btn-xl js-scroll-trigger"
+                                            :loading="waitingForResponse"
+                                            :disabled="cart_total < 1"
+                                            class="add-to-card btn-block btn btn-primary btn-xl js-scroll-trigger"
                                             @click="storeSale"
                                         >Pay Now {{ total | currency }}</v-btn>
                                     </v-col>
@@ -187,13 +209,15 @@
         computed: {
             cart_total: {
                 get() {
-                    this.$store.state.general.cart.total;
+                    return this.$store.state.general.cart.total;
                 }
             }
         },
         data () {
             return {
                 valid: false,
+                alert: false,
+                formControl: 'form-control',
                 headers: [
                     { text: 'Quantity', value: 'total' },
                     { text: 'Product', value: 'name' },
@@ -218,7 +242,8 @@
                 card_zip_code: '',
                 rules:{
                     required: value => !!value || "Campo requerido"
-                }
+                },
+                waitingForResponse: false
             }
         },
         methods: {
@@ -243,36 +268,61 @@
                 }
             },
             async storeSale() {
-                if ( this.validateBeforeSubmit ) {
-                    try {
-                        const payload = {
-                            total: this.total,
-                            country: this.country,
-                            region: this.region,
-                            first_name: this.first_name,
-                            last_name: this.last_name,
-                            email: this.email,
-                            phone: this.phone,
-                            address: this.address,
-                            city: this.city,
-                            zip_code: this.zip_code,
-                            card: this.card,
-                            exp_year: this.exp_year,
-                            exp_month: this.exp_month,
-                            cvc: this.cvc,
-                            card_zip_code: this.card_zip_code,
-                        }
+                this.waitingForResponse = true;
 
+                const payload = {
+                    total: this.total,
+                    country: this.country,
+                    region: this.region,
+                    first_name: this.first_name,
+                    last_name: this.last_name,
+                    email: this.email,
+                    phone: this.phone,
+                    address: this.address,
+                    city: this.city,
+                    zip_code: this.zip_code,
+                    card: this.card,
+                    exp_year: this.exp_year,
+                    exp_month: this.exp_month,
+                    cvc: this.cvc,
+                    card_zip_code: this.card_zip_code
+                }
+
+                if ( !this.validateBeforeSubmit(payload) && this.cart_total > 0) {
+                    try {
                         let response = await ProductsService.storeSale(payload);
-                        console.log(response);
-                        this.$router.push('/');
+                        window.location.href = '/';
                     } catch (error) {
                         console.log(error);
                     }
                 }
+
+                this.waitingForResponse = false;
             },
-            validateBeforeSubmit() {
-                return this.$refs.form.validate();
+            validateBeforeSubmit(payload) {
+                this.alert = false;
+
+                for ( let key in payload ) {
+                    if ( payload.hasOwnProperty(key) && payload[key] === "" ) {
+                        console.log(payload);
+                        this.alert = true;
+                        break;
+                    }
+                }
+
+                return this.alert;
+            },
+            async removeProductFromCartSession(payload) {
+                this.waitingForResponse = true;
+
+                try {
+                    let response = await ProductsService.deleteProductFromCartSession(payload.id);
+                    this.fetchProductsFromCartSession();
+                } catch (error) {
+                    console.log(error);
+                }
+
+                this.waitingForResponse = false;
             }
         }
     }

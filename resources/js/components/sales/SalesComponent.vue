@@ -7,6 +7,7 @@
                     :items="sales"
                     @editClicked="goToSaleDetails"
                     @deleteClicked="openDeleteDialog"
+                    :loading="waitingForResponse"
                 >
                 </table-component>
             </template>
@@ -37,7 +38,8 @@
                     { text: 'Products', value: 'total' },
                     { text: 'Actions', value: 'actions', sortable: false },
                 ],
-                sales: []
+                sales: [],
+                waitingForResponse: true
             }
         },
         methods:{
@@ -56,6 +58,7 @@
                 } catch (error) {
                     console.log(error);
                 }
+                this.waitingForResponse = false;
             },
             goToSaleDetails(payload) {
                 console.log('product details');
